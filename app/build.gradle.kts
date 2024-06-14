@@ -70,13 +70,15 @@ dependencies {
 
     // ktor
     implementation(libs.ktor.core)
-    implementation(libs.ktor.serialization)
     implementation(libs.ktor.android)
+    implementation(libs.ktor.negotiation)
+    implementation(libs.ktor.serialization.json)
     implementation(libs.ktor.logging)
 
     // hilt
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation)
 
     // coroutines
     implementation(libs.coroutines.core)
@@ -84,6 +86,4 @@ dependencies {
 
     // lifecycle
     implementation(libs.lifecycle.viewmodel)
-
-    implementation(libs.kotlinx.serialization)
 }
