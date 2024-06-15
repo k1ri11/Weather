@@ -1,7 +1,9 @@
 package com.company.weather.data
 
 import com.company.weather.BuildConfig
+import com.company.weather.data.models.CityResponse
 import com.company.weather.data.models.WeatherResponse
+import com.company.weather.data.models.toCity
 import com.company.weather.data.models.toWeather
 import com.company.weather.data.util.Resource
 import com.company.weather.domain.model.City
@@ -24,9 +26,9 @@ class Api @Inject constructor(
 
     suspend fun getCities(): Resource<List<City>> {
         return try {
-            val result = client.get(CITIES_URL).body<List<City>>()
+            val result = client.get(CITIES_URL).body<List<CityResponse>>()
             if (result.isEmpty()) Resource.Error()
-            else Resource.Success(result)
+            else Resource.Success(result.filter { it.cityName.isNotEmpty() }.map { it.toCity() })
         } catch (e: Exception) {
             Resource.Error(e.message)
         }

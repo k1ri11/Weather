@@ -25,27 +25,19 @@ class CitiesViewModel @Inject constructor(
     private val context: Context,
 ) : ViewModel() {
 
-    private val _citiesState = MutableStateFlow<ScreenState<CitiesState>>(ScreenState.Loading())
-    val citiesState: StateFlow<ScreenState<CitiesState>> = _citiesState.asStateFlow()
+    private val _citiesState = MutableStateFlow<ScreenState<List<City>>>(ScreenState.Loading())
+    val citiesState: StateFlow<ScreenState<List<City>>> = _citiesState.asStateFlow()
     fun getCities() = viewModelScope.launch(dispatchers.default) {
         _citiesState.value = ScreenState.Loading()
         repository.getCities().collect { result ->
-            val sortedList = result.data!!.filter { it.cityName.isNotEmpty() }.sortedBy { it.cityName }
-            val citiesMap = sortedList.groupBy { it.cityName.first().toString() }
             when (result) {
                 is Resource.Loading -> {
                     _citiesState.value = ScreenState.Loading()
                 }
 
                 is Resource.Success -> {
-                    _citiesState.value = ScreenState.Success(
-                        CitiesState(
-                            citiesMap = citiesMap,
-                            startIndexes = getStartIndexes(citiesMap.entries),
-                            endIndexes = getEndIndexes(citiesMap.entries),
-                            sortedCities = sortedList
-                        )
-                    )
+                    val sortedList = result.data!!.sortedBy { it.cityName }
+                    _citiesState.value = ScreenState.Success(sortedList)
                 }
 
                 is Resource.Error -> {
@@ -54,25 +46,4 @@ class CitiesViewModel @Inject constructor(
             }
         }
     }
-
-    private fun getStartIndexes(entries: Set<Map.Entry<String, List<City>>>): List<Int> {
-        var acc = 0
-        val list = mutableListOf<Int>()
-        entries.forEach { entry ->
-            list.add(acc)
-            acc += entry.value.size
-        }
-        return list
-    }
-
-    private fun getEndIndexes(entries: Set<Map.Entry<String, List<City>>>): List<Int> {
-        var acc = 0
-        val list = mutableListOf<Int>()
-        entries.forEach { entry ->
-            acc += entry.value.size
-            list.add(acc)
-        }
-        return list
-    }
 }
-

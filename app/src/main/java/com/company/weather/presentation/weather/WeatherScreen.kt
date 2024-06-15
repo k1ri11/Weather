@@ -54,7 +54,7 @@ fun WeatherScreen(
 }
 
 @Composable
-fun WeatherContent(
+private fun WeatherContent(
     state: Weather,
     cityName: String,
     modifier: Modifier = Modifier,
@@ -84,7 +84,7 @@ fun WeatherContent(
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun WeatherContentPreview() {
+private fun WeatherContentPreview() {
     WeatherContent(
         state = Weather(1, "23°C", ""),
         cityName = "Москва",
