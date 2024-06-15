@@ -25,6 +25,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "OPEN_WEATHER_MAP_KEY", "\"dc08e52daf460330341618467c8a42bc\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -39,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"
@@ -86,4 +90,5 @@ dependencies {
 
     // lifecycle
     implementation(libs.lifecycle.viewmodel)
+    implementation(libs.compose.navigation)
 }

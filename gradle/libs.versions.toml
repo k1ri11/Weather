@@ -9,6 +9,7 @@ lifecycleRuntimeKtx = "2.8.1"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 ksp = "1.9.23-1.0.20"
+compose-navigation = "2.8.0-beta03"
 
 # network
 ktor-version = "2.3.11"
@@ -38,6 +39,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
 
 #ktor
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-version" }

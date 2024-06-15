@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.company.weather.presentation.cities_list.CitiesListScreen
 import com.company.weather.ui.theme.WeatherTheme
 import com.company.weather.ui.theme.bgColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = bgColor) {
-                    CitiesListScreen()
+                    Navigation()
                 }
             }
         }

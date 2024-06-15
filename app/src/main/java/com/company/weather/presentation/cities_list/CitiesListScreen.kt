@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -38,6 +39,7 @@ import com.company.weather.ui.theme.Typography
 fun CitiesListScreen(
     modifier: Modifier = Modifier,
     viewModel: CitiesViewModel = hiltViewModel(),
+    onItemClick: (City) -> Unit,
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.getCities()
@@ -45,18 +47,18 @@ fun CitiesListScreen(
     val state by viewModel.citiesState.collectAsState()
     when (val currentState = state) {
         is ScreenState.Error -> {
-            ErrorDialog(currentState.message) { viewModel.getCities() }
+            ErrorDialog(message = currentState.message, modifier = Modifier.fillMaxSize()) { viewModel.getCities() }
         }
 
         is ScreenState.Loading -> {
-            ShowProgressIndicator()
+            ShowProgressIndicator(modifier = Modifier.fillMaxSize())
         }
 
         is ScreenState.Success -> {
             CitiesListContent(
                 state = currentState.data,
                 modifier = modifier.fillMaxSize(),
-                onItemClick = {/* navigate to next screen */ }
+                onItemClick = { onItemClick(it) }
             )
         }
     }
@@ -65,7 +67,7 @@ fun CitiesListScreen(
 @Composable
 fun CitiesListContent(
     state: CitiesState,
-    onItemClick: (String) -> Unit,
+    onItemClick: (City) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -74,7 +76,6 @@ fun CitiesListContent(
             state.endIndexes.contains(listState.firstVisibleItemIndex + 1)
         }
     }
-    val firstVisibleItemIndex by remember { derivedStateOf { listState.firstVisibleItemIndex } }
 
     LazyColumn(
         modifier = modifier,
@@ -83,16 +84,16 @@ fun CitiesListContent(
         itemsIndexed(state.sortedCities) { index, city ->
             CityItem(
                 city,
-                showCharHeader = state.startIndexes.contains(index) && firstVisibleItemIndex != index,
+                showCharHeader = state.startIndexes.contains(index) && listState.firstVisibleItemIndex != index,
             ) {
-                onItemClick(it)
+                onItemClick(state.sortedCities[index])
             }
         }
     }
     LetterHeader(
-        char = state.sortedCities[firstVisibleItemIndex].cityName.first().toString(),
+        char = state.sortedCities[listState.firstVisibleItemIndex].cityName.first().toString(),
         modifier = Modifier
-            .width(40.dp)
+            .size(40.dp)
             .then(
                 if (moveStickyHeader) {
                     Modifier.offset { IntOffset(0, -listState.firstVisibleItemScrollOffset) }
